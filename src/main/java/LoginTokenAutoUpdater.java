@@ -1,3 +1,5 @@
+
+
 import lombok.SneakyThrows;
 
 import java.io.IOException;
@@ -12,26 +14,31 @@ public class LoginTokenAutoUpdater {
         // Construct the timer
         Timer timer = new Timer();
         System.out.println("Starting from: "+new Date());
-        // starting from 3000ms, run every 86400000ms;
-        timer.schedule(new MyTask(),3000,86400000);
+        // starting from 3000ms, run every 86400000ms / 24 hours;
+        timer.schedule(new TokenUpdater(),3000,86400000);
     }
 }
 
 /**
  * Timed Task
  */
-class MyTask extends TimerTask{
+class TokenUpdater extends TimerTask{
 
     // function to be called back
     FirebaseUtil fu = new FirebaseUtil();
 
-    MyTask() throws IOException, ExecutionException, InterruptedException {
+    TokenUpdater() throws IOException, ExecutionException, InterruptedException {
     }
 
     @SneakyThrows
     public void run() {
+
         System.out.println("Hello. Current time is: "+new Date());
+        System.out.println("Old login token is: " + fu.getLoginToken("admin"));
         fu.updateToken();
+        Thread.sleep(2000);
+        System.out.println("New login token is: " + fu.getLoginToken("admin"));
+        System.out.println("------------------------------------------------------");
     }
 
 }
